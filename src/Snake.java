@@ -1,5 +1,6 @@
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.List;
 
 // Snake by patrick
@@ -12,7 +13,7 @@ public class Snake {
     
     
     public Snake(int row, int col, int size) { // Initial position of the head of the snake and number of inital nodes
-        // Finish this method
+        body = new ArrayList<Node>();
     }
     
     public boolean canMove(int row, int col) {
@@ -26,6 +27,10 @@ public class Snake {
     
     public void move() {
         // Finish this method
+    }
+
+    void setDirection(Direction direction) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

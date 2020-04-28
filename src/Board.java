@@ -1,19 +1,45 @@
 
 import java.awt.Graphics;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Timer;
 
 // Snake by patrick
 
 public class Board extends javax.swing.JPanel {
     
-    private int numRows;
-    private int numCols;
+    class MyKeyAdapter extends KeyAdapter {
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP:
+                    snake.setDirection(Direction.UP);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    snake.setDirection(Direction.RIGHT);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    snake.setDirection(Direction.DOWN);
+                    break;
+                case KeyEvent.VK_LEFT:
+                   snake.setDirection(Direction.LEFT);
+                    break;
+                
+            }
+        }
+    }
+    
+    private final int INITIAL_DELTA_TIME = 150;
+    
+    private int numRows = 50;
+    private int numCols = 50;
     private Snake snake;
     private Food food;
     private Food specialFood;
     private Timer snakeTimer;
     private Timer specialFoodTimer;
-    private int DeltaTime;
+    private int deltaTime;
 
     /**
      * Creates new form Board
@@ -24,7 +50,14 @@ public class Board extends javax.swing.JPanel {
     }
     
     private void myInit() {
-        // Finish this method
+        snake = new Snake(15, 15, 3);
+        food = new Food(snake);
+        
+        deltaTime = INITIAL_DELTA_TIME;
+        
+        MyKeyAdapter keyAdepter = new MyKeyAdapter();
+        addKeyListener(keyAdepter);
+        setFocusable(true);
     }
     
     public Board(int numRows, int numCols) {

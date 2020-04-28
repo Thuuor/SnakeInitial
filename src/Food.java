@@ -1,4 +1,5 @@
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 // Snake by patrick
@@ -14,8 +15,7 @@ public class Food {
     }
     
     public void paint(Graphics g, int squareWidth, int squareHeight) {
-        // Finish this method. Call Util.drawSquare()
+        Util.drawSquare(g, squareWidth, squareWidth, squareWidth, squareHeight, Color.green);
     }
     
-    // Create all the methods you need here
 }
