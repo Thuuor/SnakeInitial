@@ -31,6 +31,22 @@ public class Board extends javax.swing.JPanel {
     }
     
     private final int INITIAL_DELTA_TIME = 150;
+
+    public int getNumRows() {
+        return numRows;
+    }
+
+    public void setNumRows(int numRows) {
+        this.numRows = numRows;
+    }
+
+    public int getNumCols() {
+        return numCols;
+    }
+
+    public void setNumCols(int numCols) {
+        this.numCols = numCols;
+    }
     
     private int numRows = 50;
     private int numCols = 50;
@@ -40,6 +56,9 @@ public class Board extends javax.swing.JPanel {
     private Timer snakeTimer;
     private Timer specialFoodTimer;
     private int deltaTime;
+    private ScoreBoard scoreBoard;
+    private boolean gameOver;
+    private MyKeyAdapter keyAdapter;
 
     /**
      * Creates new form Board
@@ -61,7 +80,12 @@ public class Board extends javax.swing.JPanel {
     }
     
     public Board(int numRows, int numCols) {
-        // Finish this method
+        this.numRows = numRows;
+        this.numCols = numCols;
+    }
+    
+    public void setScoreBoard(ScoreBoard scoreBoard) {
+        this.scoreBoard = scoreBoard;
     }
     
     public boolean colideFood() {

@@ -17,12 +17,23 @@ public class ScoreBoard extends javax.swing.JPanel {
      */
     public ScoreBoard() {
         initComponents();
+        incrementScore(0);
     }
     
     public void incrementScore(int increment) {
-        // Finish this method. And add all you need to the class
+        score += increment;
+        ScoreLabel.setText("Score: " + score);
     }
 
+    public void setScore(int score) {
+        this.score = score;
+        incrementScore(0);
+    }
+    
+    public int getScore() {
+        return score;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,19 +43,14 @@ public class ScoreBoard extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 39, Short.MAX_VALUE)
-        );
+        ScoreLabel = new javax.swing.JLabel();
+
+        add(ScoreLabel);
+        ScoreLabel.getAccessibleContext().setAccessibleDescription("");
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel ScoreLabel;
     // End of variables declaration//GEN-END:variables
 }
