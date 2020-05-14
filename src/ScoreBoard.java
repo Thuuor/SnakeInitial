@@ -3,33 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-// Snake by patrick
-public class ScoreBoard extends javax.swing.JPanel {
-    
-    private int score;
 
+
+/**
+ *
+ * @author 10229590
+ */
+public class ScoreBoard extends javax.swing.JPanel implements ScoreBoardIncrementer{
+
+    private int score;
     /**
      * Creates new form ScoreBoard
      */
     public ScoreBoard() {
         initComponents();
+        score = 0;
         incrementScore(0);
-    }
-    
-    public void incrementScore(int increment) {
-        score += increment;
-        ScoreLabel.setText("Score: " + score);
     }
 
-    public void setScore(int score) {
-        this.score = score;
-        incrementScore(0);
+    public void incrementScore(int increment){
+        score += increment;
+        jLabel1.setText("Score:" + score);
     }
-    
-    public int getScore() {
-        return score;
-    }
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,14 +34,41 @@ public class ScoreBoard extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        ScoreLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
-        add(ScoreLabel);
-        ScoreLabel.getAccessibleContext().setAccessibleDescription("");
+        jLabel1.setText("jLabel1");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(174, 174, 174)
+                .addComponent(jLabel1)
+                .addContainerGap(175, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel ScoreLabel;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void resetScore() {
+        score = 0;
+        incrementScore(0);
+    }
+
+    @Override
+    public int getScore() {
+        return score;
+    }
 }

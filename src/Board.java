@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.*;
+import javax.swing.JFrame;
 import javax.swing.Timer;
 
 public class Board extends javax.swing.JPanel {
@@ -12,8 +13,9 @@ public class Board extends javax.swing.JPanel {
     private Food food;
     public static int numRows = 30;
     public static int numCols = 30;
-    private ScoreBoard scoreBoard;
-
+    private ScoreBoardIncrementer scoreBoard;
+    private JFrame parent;
+    
     private Timer timer;
     private int deltaTime;
     public static final int INITIAL_DELTA_TIME = 50;
@@ -44,13 +46,18 @@ public class Board extends javax.swing.JPanel {
         this.numCols = numCols;
     }
 
+    public Board(ScoreBoardIncrementer inc,JFrame parent){
+        this();
+        this.parent = parent;
+        scoreBoard = inc;
+    }
+    
     private void myInit() {
         snake = new Snake(5, 5, 3);
         food = new Food(snake);
         deltaTime = INITIAL_DELTA_TIME;
         MyKeyAdapter keyAdapter = new MyKeyAdapter();
         addKeyListener(keyAdapter);
-        //scoreBoard.setScore(0);
         
         createTime();
         setFocusable(true);
@@ -70,13 +77,13 @@ public class Board extends javax.swing.JPanel {
                             food = new Food(snake);
                             snake.setRemainingNodes(5);
                             specialCount = 0;
-                            //scoreBoard.incrementScore(5);
+                            scoreBoard.incrementScore(5);
                         } else {
                             food.setIsSpecial(false);
                             food = new Food(snake);
                             snake.setRemainingNodes(1);
                             specialCount++;
-                            //scoreBoard.incrementScore(1); 
+                            scoreBoard.incrementScore(1); 
                         }
                     }
                     snake.move();
