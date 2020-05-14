@@ -3,11 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-/**
- *
- * @author victoralonso
- */
+// Snake by patrick
 public class ScoreBoard extends javax.swing.JPanel {
     
     private int score;

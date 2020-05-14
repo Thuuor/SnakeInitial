@@ -1,47 +1,111 @@
-
+// Snake by patrick
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
-import java.util.List;
-
-// Snake by patrick
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.util.*;
 
 public class Snake {
-    
+
     private Direction direction;
     private List<Node> body;
     private int remainingNodesToCreate = 0;
     
-    
-    public Snake(int row, int col, int size) { // Initial position of the head of the snake and number of inital nodes
+
+    public Snake(int row, int col, int size) {
         body = new ArrayList<Node>();
+        for (int i = 0; i < size; i++) {
+            body.add(new Node((row), (col) - i));
+        }
+        direction = Direction.RIGHT;
     }
-    
-    public boolean canMove(int row, int col) {
-        
-        return true;
-    }
-    
+
     public void paint(Graphics g, int squareWidth, int squareHeight) {
-        boolean firstNode = true; // To print the head, first Node
-        for (Node node: body) {
-            if(firstNode) {
+        boolean firstNode = true; // To print the head, first Node    
+        for (Node node : body) {
+            if (firstNode) {
                 firstNode = false;
-                Util.drawSquare(g, squareWidth, squareHeight, node.getCol(),node.getRow() , new Color(12, 96, 94));
+                Util.drawSquare(g, node.getRow(), node.getCol(), squareWidth, squareHeight, new Color(115, 237, 19));
             } else {
-                Util.drawSquare(g, squareWidth, squareHeight, node.getCol(),node.getRow() , new Color(70, 39, 204));
+                Util.drawSquare(g, node.getRow(), node.getCol(), squareWidth, squareHeight, new Color(115, 237, 19));
             }
         }
     }
-    
-    public void move() {
-        // Finish this method
+
+    public Direction getDirection() {
+        return direction;
     }
 
-    void setDirection(Direction direction) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public List<Node> getBody() {
+        return body;
+    }
+   
+    public Node getHeader(){
+        return body.get(0);
+    }
+
+    public boolean canMove() {
+        Node firstNode = body.get(0);
+        Node node;
+        if (firstNode.getCol() < 0 || firstNode.getCol() >= Board.numCols
+                || firstNode.getRow() < 0 || firstNode.getRow() >= Board.numRows) { 
+            return false;
+        } else {  
+            if (colidesWithItSelf(firstNode)) {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    private boolean colidesWithItSelf(Node firstNode) {
+        Node node;
+        for (int i = 1; i < body.size(); i++) {
+            node = body.get(i);
+            if (node.getCol() == firstNode.getCol() && node.getRow() == firstNode.getRow()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void remainingNodesToMove(int row, int col) {
+        body.add(0, new Node(row, col));
+        if (remainingNodesToCreate == 0) {
+            body.remove(body.size() - 1);
+        } else {
+            remainingNodesToCreate--;
+        }
     }
     
-    
-    
+    public void setRemainingNodes(int remainingNodesToCreate){
+        this.remainingNodesToCreate += remainingNodesToCreate;
+    }
+
+    public void move() {
+        int row = body.get(0).getRow();
+        int col = body.get(0).getCol();
+        switch (direction) {
+            case UP:
+                remainingNodesToMove(row - 1, col);
+                break;
+            case DOWN:
+                remainingNodesToMove(row + 1, col);
+                break;
+            case LEFT:
+                remainingNodesToMove(row, col - 1);
+                break;
+            case RIGHT:
+                remainingNodesToMove(row, col + 1);
+                break;
+        }
+
+        Toolkit.getDefaultToolkit().sync();
+    }
+
 }
+

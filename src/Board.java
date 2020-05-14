@@ -1,106 +1,157 @@
-
-import java.awt.Graphics;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.Timer;
-
 // Snake by patrick
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.*;
+import javax.swing.Timer;
 
 public class Board extends javax.swing.JPanel {
-    
-    class MyKeyAdapter extends KeyAdapter {
 
-        @Override
-        public void keyPressed(KeyEvent e) {
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_UP:
-                    snake.setDirection(Direction.UP);
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    snake.setDirection(Direction.RIGHT);
-                    break;
-                case KeyEvent.VK_DOWN:
-                    snake.setDirection(Direction.DOWN);
-                    break;
-                case KeyEvent.VK_LEFT:
-                   snake.setDirection(Direction.LEFT);
-                    break;
-                
-            }
-        }
-    }
-    
-    private final int INITIAL_DELTA_TIME = 150;
-
-    public int getNumRows() {
-        return numRows;
-    }
-
-    public void setNumRows(int numRows) {
-        this.numRows = numRows;
-    }
-
-    public int getNumCols() {
-        return numCols;
-    }
-
-    public void setNumCols(int numCols) {
-        this.numCols = numCols;
-    }
-    
-    private int numRows = 50;
-    private int numCols = 50;
     private Snake snake;
     private Food food;
-    private Food specialFood;
-    private Timer snakeTimer;
-    private Timer specialFoodTimer;
-    private int deltaTime;
+    public static int numRows = 30;
+    public static int numCols = 30;
     private ScoreBoard scoreBoard;
-    private boolean gameOver;
-    private MyKeyAdapter keyAdapter;
 
-    /**
-     * Creates new form Board
-     */
+    private Timer timer;
+    private int deltaTime;
+    public static final int INITIAL_DELTA_TIME = 50;
+
+    public static void setNumRows(int numRows) {
+        Board.numRows = numRows;
+    }
+
+    public static void setNumCols(int numCols) {
+        Board.numCols = numCols;
+    }
+
+    public int getSquareWidth() {
+        return (int) (getWidth() / numCols);
+    }
+
+    public int getSquareHeight() {
+        return (int) (getHeight() / numRows);
+    }
+
     public Board() {
         initComponents();
         myInit();
     }
-    
-    private void myInit() {
-        snake = new Snake(15, 15, 3);
-        food = new Food(snake);
-        
-        deltaTime = INITIAL_DELTA_TIME;
-        
-        MyKeyAdapter keyAdepter = new MyKeyAdapter();
-        addKeyListener(keyAdepter);
-        setFocusable(true);
-    }
-    
+
     public Board(int numRows, int numCols) {
         this.numRows = numRows;
         this.numCols = numCols;
     }
-    
-    public void setScoreBoard(ScoreBoard scoreBoard) {
-        this.scoreBoard = scoreBoard;
+
+    private void myInit() {
+        snake = new Snake(5, 5, 3);
+        food = new Food(snake);
+        deltaTime = INITIAL_DELTA_TIME;
+        MyKeyAdapter keyAdapter = new MyKeyAdapter();
+        addKeyListener(keyAdapter);
+        //scoreBoard.setScore(0);
+        
+        createTime();
+        setFocusable(true);
+
+        timer.start();
     }
-    
-    public boolean colideFood() {
-        // Finish this method
+
+    private void createTime() {
+        timer = new Timer(deltaTime, new ActionListener() {
+        int specialCount = 0;
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if (!gameOver()) {
+                    if(colideFood()){
+                        if(specialCount == 10){
+                            food.setIsSpecial(true);
+                            food = new Food(snake);
+                            snake.setRemainingNodes(5);
+                            specialCount = 0;
+                            //scoreBoard.incrementScore(5);
+                        } else {
+                            food.setIsSpecial(false);
+                            food = new Food(snake);
+                            snake.setRemainingNodes(1);
+                            specialCount++;
+                            //scoreBoard.incrementScore(1); 
+                        }
+                    }
+                    snake.move();
+                    repaint();
+
+                } else {
+                    timer.stop();
+                }
+                Toolkit.getDefaultToolkit().sync();
+            }
+
+        });
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        paintBoard((Graphics2D) g);
+        snake.paint(g, getSquareWidth(), getSquareHeight());
+        food.paint(g, getSquareWidth(), getSquareHeight());
+        
+    }
+
+    public void paintBoard(Graphics2D g2d) {
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                Util.drawSquare(g2d, row, col, getSquareWidth(), getSquareHeight(), new Color(255, 255, 255));
+
+            }
+        }
+    }
+
+   public boolean colideFood() {
+        Node head = snake.getHeader();
+            return food.getPosition().getCol() == head.getCol() && food.getPosition().getRow() == head.getRow();
+    }
+
+    public boolean gameOver() {
+        if (!snake.canMove()) {
+            return true;
+        }
         return false;
     }
-    
-    public void gameOver() {
-        // Finish this method
-    }
-    
-    @Override 
-    protected void paintComponent(Graphics g)  {
-        // Finish this method
-        // Paint the Snake and the food here
+
+
+    class MyKeyAdapter extends KeyAdapter {
+
+        @Override
+        public void keyPressed(KeyEvent ev) {
+            switch (ev.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    if (snake.getDirection() != Direction.RIGHT) {
+                        snake.setDirection(Direction.LEFT);
+                    }
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    if (snake.getDirection() != Direction.LEFT) {
+                        snake.setDirection(Direction.RIGHT);
+                    }
+                    break;
+                case KeyEvent.VK_UP:
+                    if (snake.getDirection() != Direction.DOWN) {
+                        snake.setDirection(Direction.UP);
+                    }
+                    break;
+                case KeyEvent.VK_DOWN:
+                    if (snake.getDirection() != Direction.UP) {
+                        snake.setDirection(Direction.DOWN);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            repaint();
+        }
     }
 
     /**
